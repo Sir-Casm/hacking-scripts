@@ -10,7 +10,8 @@ def scan(ip):
   broadcast_arp_request = broadcast/arp_request
   answered_list = scapy.srp(broadcast_arp_request, timeout=1)[0]
   for element in answered_list:
-    print(element)
+    print(element[1].hwsrc)
+    print(element[1].psrc)
     print("---------------")
   
   
