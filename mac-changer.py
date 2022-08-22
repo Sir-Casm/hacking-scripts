@@ -12,8 +12,9 @@ def get_arguments():
   (options, arguments) = parser.parse_args()
   if not options.interface:
     parser.error("Please specify an interface, use --help or -h for information.")
-  if not options.new_mac:
-    parser.error("Please specify a new MAC address, use --help or -h for information.")
+  mac_check = re.search(r"^((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}$", options.new_mac)
+  if not mac_check:
+      parser.error("Please specify a valid new MAC address for the target interface, use --help or -h for information.")
   return options
 
 
@@ -26,7 +27,7 @@ def change_mac(interface, new_mac):
   
 def get_current_mac(interface):
   interface_check = subprocess.check_output(["ifconfig", interface])
-  mac_check = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", interface_check)
+  mac_check = re.search(r"((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}", interface_check)
   if mac_check:
     return mac_check.group(0)
   else:
