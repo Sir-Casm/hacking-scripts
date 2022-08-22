@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
 import subprocess
-import optparse
+import argparse
 import re
 
 
 def get_arguments():
-  parser = optparse.OptionParser()
-  parser.add_option("-i", "--interface", dest="interface", help="Interface you want to change the MAC address for.")
-  parser.add_option("-m", "--mac", dest="new_mac", help="The new MAC address you want to set.")
-  (options, arguments) = parser.parse_args()
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-i", "--interface", dest="interface", help="Interface you want to change the MAC address for.")
+  parser.add_argument("-m", "--mac", dest="new_mac", help="The new MAC address you want to set.")
+  options = parser.parse_args()
   if not options.interface:
     parser.error("Please specify an interface, use --help or -h for information.")
-  mac_check = re.search(r"^((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}$", options.new_mac)
+  mac_check = re.search(r"^((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}$", str(options.new_mac))
   if not mac_check:
       parser.error("Please specify a valid new MAC address for the target interface, use --help or -h for information.")
   return options
@@ -27,13 +27,13 @@ def change_mac(interface, new_mac):
   
 def get_current_mac(interface):
   interface_check = subprocess.check_output(["ifconfig", interface])
-  mac_check = re.search(r"((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}", interface_check)
+  mac_check = re.search(r"((([a-f0-9]{2}:){5})|(([a-f0-9]{2}-){5}))[a-f0-9]{2}", str(interface_check))
   if mac_check:
     return mac_check.group(0)
   else:
     print("Could not read the MAC address.")
 
-
+    
 options = get_arguments()
 
 current_mac = get_current_mac(options.interface) 
