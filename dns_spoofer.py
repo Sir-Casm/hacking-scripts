@@ -20,7 +20,7 @@ def process_packet(packet):
             del scapy_packet[inet.UDP].len
             del scapy_packet[inet.UDP].chksum
 
-            packet.set_payload(str(scapy_packet))
+            packet.set_payload(bytes(scapy_packet))
 
     packet.accept()
 
