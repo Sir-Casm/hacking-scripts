@@ -10,6 +10,11 @@ def process_packet(packet):
     packet.accept()
 
 
-queue = netfilterqueue.NetfilterQueue()
-queue.bind(0, process_packet)
-queue.run()
+try:
+    while True:
+        queue = netfilterqueue.NetfilterQueue()
+        queue.bind(0, process_packet)
+        queue.run()
+except KeyboardInterrupt:
+    print("\nExiting script.\n")
+
