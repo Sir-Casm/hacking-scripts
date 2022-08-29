@@ -3,6 +3,7 @@
 import netfilterqueue
 import scapy.layers.inet as inet
 import scapy.all as scapy
+import re
 
 
 def set_load(packet, load):
@@ -18,7 +19,10 @@ def process_packet(packet):
     if scapy_packet.haslayer(scapy.Raw) and scapy_packet.haslayer(inet.TCP):
         if scapy_packet[inet.TCP].dport == 80:
             print("Request:")
-            print(scapy_packet.show())
+            modified_load = re.sub("Accept-Encoding:.*?\\r\\n", "", scapy_packet[scapy.Raw].load)
+            new_packet = set_load(scapy_packet, modified_load)
+            packet.set_payload(bytes(new_packet))
+            
         elif scapy_packet[inet.TCP].sport == 80:
             print("Response:")
             print(scapy_packet.show())
